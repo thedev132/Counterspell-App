@@ -1,36 +1,63 @@
 {
   "expo": {
-    "name": "CounterspellNFC",
-    "slug": "CounterspellNFC",
+    "name": "Counterspell",
+    "slug": "countespell-sv",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "counterspell",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      },
+      "bundleIdentifier": "com.mmortada685.CounterspellNFC"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mmortada685.CounterspellNFC",
+      "permissions": [
+        "android.permission.NFC"
+      ],
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/icon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+      "react-native-nfc-manager",
+      {
+        "includeNdefEntitlement": false
+      }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d5c60441-8aa2-4e97-976c-05bdae106f77"
+      }
+    },
+    "owner": "mmortada685",
+    "updates": {
+      "url": "https://u.expo.dev/d5c60441-8aa2-4e97-976c-05bdae106f77"
     }
   }
 }
