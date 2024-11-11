@@ -135,7 +135,7 @@ export default function Page() {
           <Text className='text-white text-2xl text-center my-10'>Hello {user?.fullName}!</Text>
           <View className='flex-grow'>
             <TouchableOpacity onPress={toggleReadModal}>
-              <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Read NFC</Text>
+              <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Grant XP</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleWriteModal}>
               <Text  className='text-white text-center p-5 mb-5 bg-red-600 rounded-[12] overflow-hidden mx-20'>Write NFC</Text>
@@ -175,7 +175,10 @@ export default function Page() {
                 <TouchableOpacity onPress={toggleWriteModal}>
                   <Text className='text-white px-5 py-4 overflow-hidden bg-red-600 rounded-[12] mx-20'>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => writeNdef(selectedUser)}>
+                <TouchableOpacity onPress={async () => {
+                  await writeNdef(selectedUser);
+                  setSearchQuery('');
+                }}>
                   <Text className='text-white px-5 py-4 overflow-hidden bg-green-600 rounded-[12] mx-20'>Write NFC</Text>
                 </TouchableOpacity>
               </View>
