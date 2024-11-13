@@ -1,6 +1,6 @@
 import { SignedIn, SignedOut, useAuth, useOAuth, useUser  } from '@clerk/clerk-expo'
 import { Link, router } from 'expo-router'
-import { Button, Text, View, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, FlatList, TouchableOpacity } from 'react-native'
 import * as WebBrowser from 'expo-web-browser';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
@@ -12,6 +12,7 @@ import { useEffect, useCallback } from 'react';
 import * as Linking from 'expo-linking';
 import { handleSignOut, useWarmUpBrowser } from '~/lib/auth';
 import Event from '~/lib/event';
+import { Button } from "~/components/ui/button"
 
 export default function Page() {
   const { user } = useUser()
@@ -189,20 +190,20 @@ export default function Page() {
         <View className='flex h-full'>
           <Text className='text-white text-2xl text-center my-10'>Hello {user?.fullName}!</Text>
           <View className='flex-grow'>
-            <TouchableOpacity onPress={toggleReadModal}>
+            <Button onPress={toggleReadModal}>
               <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Grant XP</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleEventModal}>
+            </Button>
+            <Button onPress={toggleEventModal}>
               <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Event Attendace</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleWriteModal}>
+            </Button>
+            <Button onPress={toggleWriteModal}>
               <Text  className='text-white text-center p-5 mb-5 bg-red-600 rounded-[12] overflow-hidden mx-20'>Write NFC</Text>
-            </TouchableOpacity>
+            </Button>
           </View>
           
-          <TouchableOpacity onPress={handleSignOut}>
+          <Button onPress={handleSignOut}>
             <Text className='text-white text-center p-5 bg-red-600 rounded-[12] overflow-hidden mx-20 mb-5'>Sign Out</Text>
-          </TouchableOpacity>
+          </Button>
 
           <Modal isVisible={isWriteModalVisible}>
             <View className='bg-[#1B1B1B] flex p-5 rounded-[12] shadow-lg shadow-black'>
