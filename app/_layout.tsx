@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {DarkTheme, DefaultTheme, Theme, ThemeProvider} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -9,11 +9,55 @@ import { Slot } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import "../global.css";
 import { PaperProvider } from 'react-native-paper';
+import {NAV_THEME} from "~/lib/constants";
+import {useColorScheme} from "~/lib/useColorScheme";
+import {Platform} from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StatusBar } from 'expo-status-bar';
+import * as React from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+const LIGHT_THEME: Theme = {
+  dark: false,
+  colors: NAV_THEME.light,
+};
+const DARK_THEME: Theme = {
+  dark: true,
+  colors: NAV_THEME.dark,
+};
+
+
 export default function RootLayout() {
+  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
+  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const theme = await AsyncStorage.getItem('theme');
+      if (Platform.OS === 'web') {
+        // Adds the background color to the html element to prevent white background on overscroll.
+        document.documentElement.classList.add('bg-background');
+      }
+      if (!theme) {
+        AsyncStorage.setItem('theme', colorScheme);
+        setIsColorSchemeLoaded(true);
+        return;
+      }
+      const colorTheme = theme === 'dark' ? 'dark' : 'light';
+      if (colorTheme !== colorScheme) {
+        setColorScheme(colorTheme);
+
+        setIsColorSchemeLoaded(true);
+        return;
+      }
+      setIsColorSchemeLoaded(true);
+    })().finally(() => {
+      SplashScreen.hideAsync();
+    });
+  }, []);
+
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -55,11 +99,18 @@ export default function RootLayout() {
     return null;
   }
 
+  if (!isColorSchemeLoaded) {
+    return null;
+  }
+
   return (
     <PaperProvider>
       <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
         <ClerkLoaded>
-          <Slot />
+          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+            <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+            <Slot />
+          </ThemeProvider>
         </ClerkLoaded>
       </ClerkProvider>
     </PaperProvider>
