@@ -185,7 +185,7 @@ export default function Page() {
   }
 
   return (
-    <SafeAreaView className='bg-[#1B1B1B] h-full'>
+    <SafeAreaView>
       <SignedIn>
         <View className='flex h-full'>
           <Text className='text-white text-2xl text-center my-10'>Hello {user?.fullName}!</Text>
