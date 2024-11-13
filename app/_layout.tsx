@@ -109,7 +109,14 @@ export default function RootLayout() {
         <ClerkLoaded>
           <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
             <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-            <Slot />
+            <Stack>
+              <Stack.Screen
+                  name='index'
+                  options={{
+                    title: 'Starter Base',
+                  }}
+              />
+            </Stack>
           </ThemeProvider>
         </ClerkLoaded>
       </ClerkProvider>
