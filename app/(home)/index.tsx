@@ -10,6 +10,8 @@ import { readNdef, writeNdef } from '~/lib/nfc';
 import User from '~/lib/user';
 import { useEffect, useCallback } from 'react';
 import * as Linking from 'expo-linking';
+import { handleSignOut, useWarmUpBrowser } from '~/lib/auth';
+import Event from '~/lib/event';
 
 export default function Page() {
   const { user } = useUser()
@@ -17,14 +19,21 @@ export default function Page() {
 
   const [isWriteModalVisible, setWriteModalVisible] = useState(false);
   const [isReadModalVisible, setReadModalVisible] = useState(false);
+  const [isEventModalVisible, setEventModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [xpAmount, setXpAmount] = useState<number>(0);
   const [reason, setReason] = useState<string>('');
   const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
 
-  const useWarmUpBrowser = () => {
+
+  WebBrowser.maybeCompleteAuthSession();
+
+
+   const useWarmUpBrowser = () => {
     useEffect(() => {
       WebBrowser.warmUpAsync();
       return () => {
@@ -32,9 +41,16 @@ export default function Page() {
       };
     }, []);
   };
-  WebBrowser.maybeCompleteAuthSession();
-
   useWarmUpBrowser();
+
+
+ const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Sign Out Error:', error);
+    }
+  };
 
   const onGooglePress = useCallback(async () => {
     try {
@@ -66,18 +82,24 @@ export default function Page() {
     }
   };
 
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Sign Out Error:', error);
+  const toggleEventModal = async () => {
+    if (!isWriteModalVisible) {
+      await getEvents()
+      setSearchQuery('')
+      console.log(allEvents)
     }
+    setEventModalVisible(!isEventModalVisible);
   };
+
 
   const personChosen = async (item: User) => {
     setSearchQuery(item.name)
     setSelectedUser(item.id)
+  }
+
+  const eventChosen = async (item: Event) => {
+    setSearchQuery(item.name)
+    setSelectedEvent(item.id)
   }
 
   const getUsers = async () => {
@@ -92,15 +114,51 @@ export default function Page() {
       mode: 'cors'
     })
 
-
     const users = await response.json()
     let userList = []
     for (let user of users) {
       userList.push(new User(user.id, user.displayName, user.primaryEmail, user.imageUrl))
     }
     setAllUsers(userList)
+  }
 
-    console.log(userList)
+  const getEvents = async () => {
+    if (!sessionId) {
+      throw new Error('Session ID is null or undefined');
+    }
+    let token = await getToken({ sessionId });
+    const response = await fetch('https://counterspell.byteatatime.dev/api/events', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      mode: 'cors'
+    })
+
+    const events = await response.json()
+    let eventList = []
+    for (let event of events) {
+      eventList.push(new Event(event.id, event.name))
+    }
+    setAllEvents(eventList)
+  }
+
+  const markAttendance = async (eventID: string) => {
+    if (!sessionId) {
+      throw new Error('Session ID is null or undefined');
+    }
+    let token = await getToken({ sessionId });
+    let userID = await readNdef()
+    const response = await fetch(`https://counterspell.byteatatime.dev/api/users/${userID}/event?eventId=${eventID}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      mode: 'cors'
+    })
+
+    if (response.ok) {
+      toggleEventModal()
+    }
   }
 
   const assignXP = async (userID: string) => {
@@ -119,14 +177,11 @@ export default function Page() {
       }),
       mode: 'cors'
     })
-
+    
     if (response.ok) {
       toggleReadModal()
     }
   }
-
-
-
 
   return (
     <SafeAreaView className='bg-[#1B1B1B] h-full'>
@@ -136,6 +191,9 @@ export default function Page() {
           <View className='flex-grow'>
             <TouchableOpacity onPress={toggleReadModal}>
               <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Grant XP</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toggleEventModal}>
+              <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Event Attendace</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleWriteModal}>
               <Text  className='text-white text-center p-5 mb-5 bg-red-600 rounded-[12] overflow-hidden mx-20'>Write NFC</Text>
@@ -198,6 +256,41 @@ export default function Page() {
                 <TouchableOpacity onPress={toggleReadModal}>
                   <Text className='text-white text-center px-5 py-4 overflow-hidden bg-red-600 rounded-[12] mx-20 mt-5'>Cancel</Text>
                 </TouchableOpacity>
+            </View>
+          </Modal>
+          <Modal isVisible={isEventModalVisible}>
+            <View className='bg-[#1B1B1B] flex p-5 rounded-[12] shadow-lg shadow-black'>
+              <Searchbar
+                style={{marginHorizontal: 20, marginVertical: 10, height: 40}}
+                inputStyle={{minHeight: 0}}
+                placeholder="Search"
+                onChangeText={setSearchQuery}
+                value={searchQuery}
+              />
+              {allEvents.some(event => event.name.toLowerCase().includes(searchQuery.toLowerCase())) ? (
+                <FlatList
+                  style={{ minHeight: 0, maxHeight: '50%', flexGrow: 0 }}
+                  scrollEnabled={true}
+                  className='m-5'
+                  data={allEvents.filter(event => event.name.toLowerCase().includes(searchQuery.toLowerCase()))}
+                  renderItem={({item}) => (
+                    <TouchableOpacity onPress={() => eventChosen(item)}>
+                      <Text className='py-2 text-white' numberOfLines={1}>{item.name}</Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={item => item.id}
+                />
+              ) : (
+                <Text className='m-5 text-center text-white'>No results found</Text>
+              )}
+              <View className='flex flex-row items-center justify-around'>
+                <TouchableOpacity onPress={toggleEventModal}>
+                  <Text className='text-white px-5 py-4 overflow-hidden bg-red-600 rounded-[12] mx-20'>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => markAttendance(selectedEvent)}>
+                  <Text className='text-white px-5 py-4 overflow-hidden bg-green-600 rounded-[12] mx-20'>Mark Attendace</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </Modal>
         </View>

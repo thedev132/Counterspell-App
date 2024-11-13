@@ -38,15 +38,12 @@ export async function readNdef() {
       if (tag) {
         tagFound = tag;
       }
-        userId = Ndef.uri.decodePayload(tagFound.ndefMessage[0].payload).substring(userId.indexOf('=') + 1)
-      if (tagFound?.ndefMessage[0].payload) {
-        
-      }
+      userId = Ndef.uri.decodePayload(tagFound.ndefMessage[0].payload)
     } catch (ex) {
       console.warn(ex);
     } finally {
       NfcManager.cancelTechnologyRequest();
     }
   
-    return userId;
+    return userId.substring(userId.indexOf('=') + 1);
 }
