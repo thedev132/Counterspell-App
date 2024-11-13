@@ -191,18 +191,18 @@ export default function Page() {
           <Text className='text-white text-2xl text-center my-10'>Hello {user?.fullName}!</Text>
           <View className='flex-grow'>
             <Button onPress={toggleReadModal}>
-              <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Grant XP</Text>
+              <Text>Grant XP</Text>
             </Button>
             <Button onPress={toggleEventModal}>
-              <Text  className='text-white text-center p-5 mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Event Attendace</Text>
+              <Text>Event Attendace</Text>
             </Button>
             <Button onPress={toggleWriteModal}>
-              <Text  className='text-white text-center p-5 mb-5 bg-red-600 rounded-[12] overflow-hidden mx-20'>Write NFC</Text>
+              <Text>Write NFC</Text>
             </Button>
           </View>
           
           <Button onPress={handleSignOut}>
-            <Text className='text-white text-center p-5 bg-red-600 rounded-[12] overflow-hidden mx-20 mb-5'>Sign Out</Text>
+            <Text>Sign Out</Text>
           </Button>
 
           <Modal isVisible={isWriteModalVisible}>
