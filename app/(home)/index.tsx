@@ -78,7 +78,7 @@ export default function Page() {
   const toggleReadModal = async () => {
     setReadModalVisible(!isReadModalVisible);
     if (!isReadModalVisible) {
-      await readNdef()
+      setSelectedUser(await readNdef())
     }
   };
 
@@ -165,6 +165,7 @@ export default function Page() {
     if (!sessionId) {
       throw new Error('Session ID is null or undefined');
     }
+
     let token = await getToken({ sessionId });
     const response = await fetch(`https://counterspell.byteatatime.dev/api/users/${userID}/xp`, {
       method: 'POST',
