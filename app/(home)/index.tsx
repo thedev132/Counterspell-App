@@ -1,6 +1,6 @@
 import { SignedIn, SignedOut, useAuth, useOAuth, useUser  } from '@clerk/clerk-expo'
 import { Link, router } from 'expo-router'
-import { Text, View, FlatList, TouchableOpacity } from 'react-native'
+import { View, FlatList, TouchableOpacity } from 'react-native'
 import * as WebBrowser from 'expo-web-browser';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
@@ -13,6 +13,10 @@ import * as Linking from 'expo-linking';
 import { handleSignOut, useWarmUpBrowser } from '~/lib/auth';
 import Event from '~/lib/event';
 import { Button } from "~/components/ui/button"
+import { Text } from "~/components/ui/text"
+import {WriteNfcDialog} from "~/components/WriteNfcDialog";
+import {GrantXPDialog} from "~/components/GrantXPDialog";
+import {EventAttendanceDialog} from "~/components/EventAttendanceDialog";
 
 export default function Page() {
   const { user } = useUser()
@@ -190,59 +194,15 @@ export default function Page() {
         <View className='flex h-full'>
           <Text className='text-white text-2xl text-center my-10'>Hello {user?.fullName}!</Text>
           <View className='flex-grow'>
-            <Button onPress={toggleReadModal}>
-              <Text>Grant XP</Text>
-            </Button>
-            <Button onPress={toggleEventModal}>
-              <Text>Event Attendace</Text>
-            </Button>
-            <Button onPress={toggleWriteModal}>
-              <Text>Write NFC</Text>
-            </Button>
+              <WriteNfcDialog users={allUsers} />
+              <GrantXPDialog />
+                <EventAttendanceDialog events={allEvents} />
           </View>
           
           <Button onPress={handleSignOut}>
             <Text>Sign Out</Text>
           </Button>
 
-          <Modal isVisible={isWriteModalVisible}>
-            <View className='bg-[#1B1B1B] flex p-5 rounded-[12] shadow-lg shadow-black'>
-              <Searchbar
-                style={{marginHorizontal: 20, marginVertical: 10, height: 40}}
-                inputStyle={{minHeight: 0}}
-                placeholder="Search"
-                onChangeText={setSearchQuery}
-                value={searchQuery}
-              />
-              {allUsers.some(user => user.name.toLowerCase().includes(searchQuery.toLowerCase())) ? (
-                <FlatList
-                  style={{ minHeight: 0, maxHeight: '50%', flexGrow: 0 }}
-                  scrollEnabled={true}
-                  className='m-5'
-                  data={allUsers.filter(user => user.name.toLowerCase().includes(searchQuery.toLowerCase()))}
-                  renderItem={({item}) => (
-                    <TouchableOpacity onPress={() => personChosen(item)}>
-                      <Text className='py-2 text-white' numberOfLines={1}>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={item => item.id}
-                />
-              ) : (
-                <Text className='m-5 text-center text-white'>No results found</Text>
-              )}
-              <View className='flex flex-row items-center justify-around'>
-                <TouchableOpacity onPress={toggleWriteModal}>
-                  <Text className='text-white px-5 py-4 overflow-hidden bg-red-600 rounded-[12] mx-20'>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={async () => {
-                  await writeNdef(selectedUser);
-                  setSearchQuery('');
-                }}>
-                  <Text className='text-white px-5 py-4 overflow-hidden bg-green-600 rounded-[12] mx-20'>Write NFC</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
           <Modal isVisible={isReadModalVisible}>
             <View className='bg-[#1B1B1B] flex p-5 rounded-[12] shadow-lg shadow-black'>
               <View className='flex flex-row items-center justify-around'>
