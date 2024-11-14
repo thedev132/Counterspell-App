@@ -202,58 +202,6 @@ export default function Page() {
           <Button onPress={handleSignOut}>
             <Text>Sign Out</Text>
           </Button>
-
-          <Modal isVisible={isReadModalVisible}>
-            <View className='bg-[#1B1B1B] flex p-5 rounded-[12] shadow-lg shadow-black'>
-              <View className='flex flex-row items-center justify-around'>
-                <TextInput mode='outlined' style={{marginHorizontal: 20, marginVertical: 10, height: 40, minWidth: 'auto'}} placeholder="Assign XP Amount" keyboardType='phone-pad' onChangeText={(xpAmount) => setXpAmount(Number(xpAmount))}
- />
-                <TouchableOpacity onPress={() => assignXP(selectedUser)}>
-                  <Text className='text-white text-center px-5 py-4 overflow-hidden bg-green-600 rounded-[12] mx-5'>Assign XP</Text>
-                </TouchableOpacity>
-              </View>
-              <TextInput mode='outlined' style={{marginHorizontal: 20, marginVertical: 10, height: 40}} placeholder="Reason" onChangeText={(reason) => setReason(reason)} />
-
-                <TouchableOpacity onPress={toggleReadModal}>
-                  <Text className='text-white text-center px-5 py-4 overflow-hidden bg-red-600 rounded-[12] mx-20 mt-5'>Cancel</Text>
-                </TouchableOpacity>
-            </View>
-          </Modal>
-          <Modal isVisible={isEventModalVisible}>
-            <View className='bg-[#1B1B1B] flex p-5 rounded-[12] shadow-lg shadow-black'>
-              <Searchbar
-                style={{marginHorizontal: 20, marginVertical: 10, height: 40}}
-                inputStyle={{minHeight: 0}}
-                placeholder="Search"
-                onChangeText={setSearchQuery}
-                value={searchQuery}
-              />
-              {allEvents.some(event => event.name.toLowerCase().includes(searchQuery.toLowerCase())) ? (
-                <FlatList
-                  style={{ minHeight: 0, maxHeight: '50%', flexGrow: 0 }}
-                  scrollEnabled={true}
-                  className='m-5'
-                  data={allEvents.filter(event => event.name.toLowerCase().includes(searchQuery.toLowerCase()))}
-                  renderItem={({item}) => (
-                    <TouchableOpacity onPress={() => eventChosen(item)}>
-                      <Text className='py-2 text-white' numberOfLines={1}>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={item => item.id}
-                />
-              ) : (
-                <Text className='m-5 text-center text-white'>No results found</Text>
-              )}
-              <View className='flex flex-row items-center justify-around'>
-                <TouchableOpacity onPress={toggleEventModal}>
-                  <Text className='text-white px-5 py-4 overflow-hidden bg-red-600 rounded-[12] mx-20'>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => markAttendance(selectedEvent)}>
-                  <Text className='text-white px-5 py-4 overflow-hidden bg-green-600 rounded-[12] mx-20'>Mark Attendace</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
         </View>
       </SignedIn>
       <SignedOut>
