@@ -15,6 +15,7 @@ import {Platform} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
+import {PortalHost} from "@rn-primitives/portal";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -109,7 +110,16 @@ export default function RootLayout() {
         <ClerkLoaded>
           <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
             <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-            <Slot />
+            <Stack>
+              <Stack.Screen
+                  name='index'
+                  options={{
+                    title: 'Starter Base',
+                  }}
+              />
+            </Stack>
+
+            <PortalHost />
           </ThemeProvider>
         </ClerkLoaded>
       </ClerkProvider>
