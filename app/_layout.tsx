@@ -120,8 +120,8 @@ export default function RootLayout() {
   
       return (
         <PaperProvider>
-          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-            <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+          <ThemeProvider value={DARK_THEME}>
+            <StatusBar style={'dark'} />
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen
                 name="(home)"
