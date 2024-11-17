@@ -8,7 +8,7 @@ export async function writeNdef(userId : string) {
       // STEP 1
       await NfcManager.requestTechnology(NfcTech.Ndef);
   
-      const bytes = Ndef.encodeMessage([Ndef.uriRecord(`https://www.google.com/search?q=${encodeURIComponent(userId)}`)]);
+      const bytes = Ndef.encodeMessage([Ndef.uriRecord(`https://counterspell.byteatatime.dev/users/${encodeURIComponent(userId)}`)]);
   
       if (bytes) {
         await NfcManager.ndefHandler // STEP 2
@@ -44,6 +44,8 @@ export async function readNdef() {
     } finally {
       NfcManager.cancelTechnologyRequest();
     }
+
+    
   
-    return userId.substring(userId.indexOf('=') + 1);
+    return userId.split("/users/")[1];
 }
