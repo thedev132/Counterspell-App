@@ -47,6 +47,8 @@ export const GrantXPDialog = () => {
             const userId = await readNdef();
             setSelectedUser(userId);
         }
+
+        setOpen(isOpen);
     }}>
         <DialogTrigger asChild>
             <Button variant='outline'>
