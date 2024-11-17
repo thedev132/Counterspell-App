@@ -21,10 +21,6 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const LIGHT_THEME: Theme = {
-  dark: false,
-  colors: NAV_THEME.light,
-};
 const DARK_THEME: Theme = {
   dark: true,
   colors: NAV_THEME.dark,
@@ -39,16 +35,12 @@ export default function RootLayout() {
   useEffect(() => {
     (async () => {
       const theme = await AsyncStorage.getItem('theme');
-      if (Platform.OS === 'web') {
-        // Adds the background color to the html element to prevent white background on overscroll.
-        document.documentElement.classList.add('bg-background');
-      }
       if (!theme) {
         AsyncStorage.setItem('theme', colorScheme);
         setIsColorSchemeLoaded(true);
         return;
       }
-      const colorTheme = theme === 'dark' ? 'dark' : 'light';
+      const colorTheme = theme === 'dark' ? 'dark' : 'dark';
       if (colorTheme !== colorScheme) {
         setColorScheme(colorTheme);
 
@@ -59,6 +51,7 @@ export default function RootLayout() {
     })().finally(() => {
       SplashScreen.hideAsync();
     });
+  
   }, []);
 
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
@@ -121,7 +114,7 @@ export default function RootLayout() {
       return (
         <PaperProvider>
           <ThemeProvider value={DARK_THEME}>
-            <StatusBar style={'dark'} />
+            <StatusBar style={'light'} />
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen
                 name="(home)"

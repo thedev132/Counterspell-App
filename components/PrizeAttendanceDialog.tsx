@@ -54,7 +54,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
         setOpen(isOpen);
     }}>
         <DialogTrigger asChild>
-            <View className="flex items-center justify-center border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
+            <View className="flex items-center justify-center border border-input hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
                 <Ionicons name="gift" size={40} color="white" className="mb-5" />
                 <Text className="text-white font-medium text-lg text-center">
                    Buy Prize

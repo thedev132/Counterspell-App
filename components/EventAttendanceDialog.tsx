@@ -50,8 +50,7 @@ export const EventAttendanceDialog = ({events}: { events: Event[] }) => {
         setOpen(isOpen);
     }}>
         <DialogTrigger asChild >
-        <View className="flex items-center justify-center border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
-            {/* <Ionicons name="pencil" size={40} color="white" className="mb-5" /> */}
+        <View className="flex items-center justify-center border border-input hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
             <MaterialIcons name="event-available" size={40} color="white" className="mb-5"/>
             <Text className="text-white font-medium text-lg text-center">
                 Event Attendance
