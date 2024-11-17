@@ -13,6 +13,7 @@ import {Input} from "~/components/ui/input";
 import { useAuth } from "@clerk/clerk-expo";
 import { readNdef } from "~/lib/nfc";
 import Prize from "~/lib/prize";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -53,9 +54,12 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
         setOpen(isOpen);
     }}>
         <DialogTrigger asChild>
-            <Button variant='outline'>
-                <Text>Buy Prize </Text>
-            </Button>
+            <View className="flex items-center justify-center border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
+                <Ionicons name="gift" size={40} color="white" className="mb-5" />
+                <Text className="text-white font-medium text-lg text-center">
+                   Buy Prize
+                </Text>
+            </View>
         </DialogTrigger>
         <DialogContent>
             <DialogHeader>

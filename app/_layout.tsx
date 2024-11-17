@@ -4,18 +4,19 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'
+import { ClerkProvider, ClerkLoaded, useAuth } from '@clerk/clerk-expo'
 import { Slot } from 'expo-router'
 import * as SecureStore from 'expo-secure-store'
 import "../global.css";
 import { PaperProvider } from 'react-native-paper';
 import {NAV_THEME} from "~/lib/constants";
 import {useColorScheme} from "~/lib/useColorScheme";
-import {Platform} from "react-native";
+import {Platform, TouchableOpacity, View} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import {PortalHost} from "@rn-primitives/portal";
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,6 +29,7 @@ const DARK_THEME: Theme = {
   dark: true,
   colors: NAV_THEME.dark,
 };
+
 
 
 export default function RootLayout() {
@@ -104,25 +106,53 @@ export default function RootLayout() {
     return null;
   }
 
-  return (
-    <PaperProvider>
-      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <ClerkLoaded>
+    // Wrap the useAuth hook inside ClerkProvider to ensure it's used correctly
+    const AuthComponent = () => {
+      const { signOut, sessionId, getToken, isSignedIn } = useAuth();
+  
+      const handleSignOut = async () => {
+        try {
+          await signOut();
+        } catch (error) {
+          console.error('Sign Out Error:', error);
+        }
+      };
+  
+      return (
+        <PaperProvider>
           <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
             <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-            <Stack screenOptions={{headerShown: false}}>
+            <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen
-                  name='(home)'
-                  options={{
-                    headerShown: false,
-                  }}
+                name="(home)"
+                options={{
+                  headerShown: true,
+                  headerTitle: '',
+                  headerTransparent: true,
+                  headerLeft: () => ( isSignedIn ? (
+                    <View className="ml-5">
+                      <FontAwesome5
+                        name="sign-out-alt"
+                        size={24}
+                        color="white"
+                        onPress={handleSignOut}
+                      />
+                    </View>) : null)
+                }}
               />
             </Stack>
-
             <PortalHost />
           </ThemeProvider>
+        </PaperProvider>
+      );
+    };
+
+  return (
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+        <ClerkLoaded>
+          <AuthComponent />
         </ClerkLoaded>
       </ClerkProvider>
-    </PaperProvider>
   );
 }
+

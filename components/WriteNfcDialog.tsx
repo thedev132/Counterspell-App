@@ -15,6 +15,7 @@ import User from "~/lib/user";
 import {useState} from "react";
 import {Button} from "~/components/ui/button";
 import {Input} from "~/components/ui/input";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export const WriteNfcDialog = ({users}: { users: User[] }) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -22,9 +23,12 @@ export const WriteNfcDialog = ({users}: { users: User[] }) => {
 
     return <Dialog>
         <DialogTrigger asChild>
-            <Button variant='outline'>
-                <Text>Write NFC</Text>
-            </Button>
+            <View className="flex items-center justify-center border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
+                <Ionicons name="pencil" size={40} color="white" className="mb-5" />
+                <Text className="text-white font-medium text-lg text-center">
+                    Write NFC
+                </Text>
+            </View>
         </DialogTrigger>
         <DialogContent>
             <DialogHeader>

@@ -10,7 +10,6 @@ import { readNdef, writeNdef } from '~/lib/nfc';
 import User from '~/lib/user';
 import { useEffect, useCallback } from 'react';
 import * as Linking from 'expo-linking';
-import { handleSignOut, useWarmUpBrowser } from '~/lib/auth';
 import Event from '~/lib/event';
 import { Button } from "~/components/ui/button"
 import { Text } from "~/components/ui/text"
@@ -20,7 +19,7 @@ import {EventAttendanceDialog} from "~/components/EventAttendanceDialog";
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import Prize from '~/lib/prize';
 import { PrizeAttendanceDialog } from '~/components/PrizeAttendanceDialog';
-
+  
 export default function Page() {
   const { user } = useUser()
   const { signOut, sessionId, getToken } = useAuth();
@@ -51,13 +50,7 @@ export default function Page() {
     getPrizes()
   })
 
- const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Sign Out Error:', error);
-    }
-  };
+
 
   const onGooglePress = useCallback(async () => {
     try {
@@ -139,28 +132,46 @@ export default function Page() {
   return (
     <SafeAreaView>
       <SignedIn>
-        <View className='flex h-full'>
-          <Text className='text-white text-2xl text-center my-10'>Hello {user?.fullName}!</Text>
-          <View className='flex-grow px-10 gap-5'>
-              <WriteNfcDialog users={allUsers} />
-              <GrantXPDialog />
-              <EventAttendanceDialog events={allEvents} />
-              <PrizeAttendanceDialog prizes={allPrizes} />
+        <View className="flex h-full">
+
+  
+          <Text className="text-white text-3xl text-center mb-10 mt-20">
+            Hello {user?.fullName}!
+          </Text>
+          <View className="flex flex-grow gap-5 px-10">
+            <View className="flex flex-row gap-5">
+              <View className="w-1/2 aspect-square">
+                <WriteNfcDialog users={allUsers} />
+              </View>
+              <View className="w-1/2 aspect-square">
+                <GrantXPDialog />
+              </View>
+            </View>
+            <View className="flex flex-row gap-5">
+              <View className="w-1/2">
+                <EventAttendanceDialog events={allEvents} />
+              </View>
+              <View className="w-1/2 aspect-square">
+                <PrizeAttendanceDialog prizes={allPrizes} />
+              </View>
+            </View>
           </View>
-          
-          <Button onPress={handleSignOut} className='mx-10 mb-5'>
-            <Text>Sign Out</Text>
-          </Button>
         </View>
       </SignedIn>
+  
       <SignedOut>
-        <View className='flex h-full items-center justify-center'>
-          <Text className='text-white text-2xl text-center my-10'>Welcome to the Counterspell App!</Text>
-          <TouchableOpacity onPress={onGooglePress}  >
-            <Text className='text-white text-center p-5 px-20 text-md mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Sign In With Google</Text>
-          </TouchableOpacity>
+        <View className="flex h-full items-center justify-center">
+          <Text className="text-white text-2xl text-center my-10">
+            Welcome to the Counterspell App!
+          </Text>
+          <Button onPress={onGooglePress} variant={'outline'}>
+            <Text>
+              Sign In With Google
+            </Text>
+          </Button>
         </View>
       </SignedOut>
     </SafeAreaView>
   )
+  
 }

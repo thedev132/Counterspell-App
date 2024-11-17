@@ -13,6 +13,7 @@ import {Input} from "~/components/ui/input";
 import Event from "~/lib/event"; // Import your Event type
 import { useAuth } from "@clerk/clerk-expo";
 import { readNdef } from "~/lib/nfc";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export const EventAttendanceDialog = ({events}: { events: Event[] }) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -48,10 +49,15 @@ export const EventAttendanceDialog = ({events}: { events: Event[] }) => {
     return <Dialog open={open} onOpenChange={async isOpen => {
         setOpen(isOpen);
     }}>
-        <DialogTrigger asChild>
-            <Button variant='outline'>
-                <Text>Event Attendance</Text>
-            </Button>
+        <DialogTrigger asChild >
+        <View className="flex items-center justify-center border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
+            {/* <Ionicons name="pencil" size={40} color="white" className="mb-5" /> */}
+            <MaterialIcons name="event-available" size={40} color="white" className="mb-5"/>
+            <Text className="text-white font-medium text-lg text-center">
+                Event Attendance
+            </Text>
+        </View>
+
         </DialogTrigger>
         <DialogContent>
             <DialogHeader>

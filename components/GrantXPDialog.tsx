@@ -13,7 +13,7 @@ import {Button} from "~/components/ui/button";
 import {Input} from "~/components/ui/input";
 import {useAuth} from "@clerk/clerk-expo";
 import {readNdef} from "~/lib/nfc";
-
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 export const GrantXPDialog = () => {
     const [xpAmount, setXpAmount] = useState(0);
     const [reason, setReason] = useState("");
@@ -51,9 +51,12 @@ export const GrantXPDialog = () => {
         setOpen(isOpen);
     }}>
         <DialogTrigger asChild>
-            <Button variant='outline'>
-                <Text>Grant XP</Text>
-            </Button>
+            <View className="flex items-center justify-center border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md p-4 aspect-square">
+                <FontAwesome5 name="plus" size={40} color="white" className="mb-5" />
+                <Text className="text-white font-medium text-lg text-center">
+                    Grant XP
+                </Text>
+            </View>
         </DialogTrigger>
         <DialogContent>
             <DialogHeader>
