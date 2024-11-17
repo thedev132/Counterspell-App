@@ -2,7 +2,7 @@ import {FlatList, View} from "react-native";
 import {Text} from "~/components/ui/text";
 import {
     Dialog, DialogClose,
-    DialogContent,
+    DialogContent, DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle, DialogTrigger
@@ -20,6 +20,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
     const [selectedPrize, setSelectedPrize] = useState<string | null>(null);
     const { sessionId, getToken } = useAuth();
     const [selectedUser, setSelectedUser] = useState("");
+    const [user, setUser] = useState<{ xp: number, displayName: number }|null>(null);
     const [open, setOpen] = useState(false);
 
     const spendPrize = async () => {
@@ -50,6 +51,13 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
         if (isOpen) {
             const userId = await readNdef();
             setSelectedUser(userId);
+            const userResponse = await fetch(`https://counterspell.byteatatime.dev/api/users/${userId}/admin`, {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`
+                }
+            });
+            const userData = await userResponse.json();
+            setUser(userData);
         }
         setOpen(isOpen);
     }}>
@@ -64,6 +72,9 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>Buy Prize</DialogTitle>
+                <DialogDescription>
+                    {user ? `User: ${user.displayName} (${user.xp.xp} XP)` : "Loading user..."}
+                </DialogDescription>
             </DialogHeader>
 
             <Input
