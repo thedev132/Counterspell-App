@@ -17,22 +17,19 @@ import { Text } from "~/components/ui/text"
 import {WriteNfcDialog} from "~/components/WriteNfcDialog";
 import {GrantXPDialog} from "~/components/GrantXPDialog";
 import {EventAttendanceDialog} from "~/components/EventAttendanceDialog";
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import Prize from '~/lib/prize';
+import { PrizeAttendanceDialog } from '~/components/PrizeAttendanceDialog';
 
 export default function Page() {
   const { user } = useUser()
   const { signOut, sessionId, getToken } = useAuth();
-
-  const [isWriteModalVisible, setWriteModalVisible] = useState(false);
-  const [isReadModalVisible, setReadModalVisible] = useState(false);
-  const [isEventModalVisible, setEventModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [allEvents, setAllEvents] = useState<Event[]>([]);
-  const [selectedUser, setSelectedUser] = useState<string>("");
-  const [selectedEvent, setSelectedEvent] = useState<string>("");
-  const [xpAmount, setXpAmount] = useState<number>(0);
-  const [reason, setReason] = useState<string>('');
+  const [allPrizes, setAllPrizes] = useState<Prize[]>([]);
   const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
+
 
 
   WebBrowser.maybeCompleteAuthSession();
@@ -48,6 +45,11 @@ export default function Page() {
   };
   useWarmUpBrowser();
 
+  useEffect(() => {
+    getUsers()
+    getEvents()
+    getPrizes()
+  })
 
  const handleSignOut = async () => {
     try {
@@ -71,41 +73,6 @@ export default function Page() {
       console.error('OAuth error', err);
     }
   }, [startOAuthFlow]);
-
-  const toggleWriteModal = async () => {
-    if (!isWriteModalVisible) {
-      await getUsers()
-      setSearchQuery('')
-    }
-    setWriteModalVisible(!isWriteModalVisible);
-  };
-
-  const toggleReadModal = async () => {
-    setReadModalVisible(!isReadModalVisible);
-    if (!isReadModalVisible) {
-      setSelectedUser(await readNdef())
-    }
-  };
-
-  const toggleEventModal = async () => {
-    if (!isWriteModalVisible) {
-      await getEvents()
-      setSearchQuery('')
-      console.log(allEvents)
-    }
-    setEventModalVisible(!isEventModalVisible);
-  };
-
-
-  const personChosen = async (item: User) => {
-    setSearchQuery(item.name)
-    setSelectedUser(item.id)
-  }
-
-  const eventChosen = async (item: Event) => {
-    setSearchQuery(item.name)
-    setSelectedEvent(item.id)
-  }
 
   const getUsers = async () => {
     if (!sessionId) {
@@ -147,60 +114,41 @@ export default function Page() {
     setAllEvents(eventList)
   }
 
-  const markAttendance = async (eventID: string) => {
+  const getPrizes = async () => {
     if (!sessionId) {
       throw new Error('Session ID is null or undefined');
     }
     let token = await getToken({ sessionId });
-    let userID = await readNdef()
-    const response = await fetch(`https://counterspell.byteatatime.dev/api/users/${userID}/event?eventId=${eventID}`, {
-      method: 'POST',
+    const response = await fetch('https://counterspell.byteatatime.dev/api/prizes', {
       headers: {
         Authorization: `Bearer ${token}`
       },
       mode: 'cors'
     })
 
-    if (response.ok) {
-      toggleEventModal()
+    const prizes = await response.json()
+    let prizeList = []
+    for (let prize of prizes) {
+      prizeList.push(new Prize(prize.id, prize.name, prize.cost, prize.stock))
     }
+    setAllPrizes(prizeList)
+    console.log(prizeList)
   }
 
-  const assignXP = async (userID: string) => {
-    if (!sessionId) {
-      throw new Error('Session ID is null or undefined');
-    }
-
-    let token = await getToken({ sessionId });
-    const response = await fetch(`https://counterspell.byteatatime.dev/api/users/${userID}/xp`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        amount: xpAmount,
-        reason: reason
-      }),
-      mode: 'cors'
-    })
-    
-    if (response.ok) {
-      toggleReadModal()
-    }
-  }
 
   return (
     <SafeAreaView>
       <SignedIn>
         <View className='flex h-full'>
           <Text className='text-white text-2xl text-center my-10'>Hello {user?.fullName}!</Text>
-          <View className='flex-grow'>
+          <View className='flex-grow px-10 gap-5'>
               <WriteNfcDialog users={allUsers} />
               <GrantXPDialog />
-                <EventAttendanceDialog events={allEvents} />
+              <EventAttendanceDialog events={allEvents} />
+              <PrizeAttendanceDialog prizes={allPrizes} />
           </View>
           
-          <Button onPress={handleSignOut}>
+          <Button onPress={handleSignOut} className='mx-10 mb-5'>
             <Text>Sign Out</Text>
           </Button>
         </View>
@@ -208,7 +156,7 @@ export default function Page() {
       <SignedOut>
         <View className='flex h-full items-center justify-center'>
           <Text className='text-white text-2xl text-center my-10'>Welcome to the Counterspell App!</Text>
-          <TouchableOpacity onPress={onGooglePress} >
+          <TouchableOpacity onPress={onGooglePress}  >
             <Text className='text-white text-center p-5 px-20 text-md mb-5 bg-green-600 rounded-[12] overflow-hidden mx-20'>Sign In With Google</Text>
           </TouchableOpacity>
         </View>
