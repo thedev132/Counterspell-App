@@ -72,7 +72,7 @@ export default function Page() {
       throw new Error('Session ID is null or undefined');
     }
     let token = await getToken({ sessionId });
-    const response = await fetch('https://counterspell.byteatatime.dev/api/users', {
+    const response = await fetch('https://counterspellsv.xyz/api/users', {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -92,7 +92,7 @@ export default function Page() {
       throw new Error('Session ID is null or undefined');
     }
     let token = await getToken({ sessionId });
-    const response = await fetch('https://counterspell.byteatatime.dev/api/events', {
+    const response = await fetch('https://counterspellsv.xyz/api/events', {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -112,7 +112,7 @@ export default function Page() {
       throw new Error('Session ID is null or undefined');
     }
     let token = await getToken({ sessionId });
-    const response = await fetch('https://counterspell.byteatatime.dev/api/prizes', {
+    const response = await fetch('https://counterspellsv.xyz/api/prizes', {
       headers: {
         Authorization: `Bearer ${token}`
       },

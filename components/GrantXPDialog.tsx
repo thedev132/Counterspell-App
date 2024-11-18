@@ -24,7 +24,7 @@ export const GrantXPDialog = () => {
 
     const grantXP = async () => {
         let token = await getToken();
-        const response = await fetch(`https://counterspell.byteatatime.dev/api/users/${selectedUser}/xp`, {
+        const response = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/xp`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`

@@ -8,7 +8,7 @@ export async function writeNdef(userId : string) {
       // STEP 1
       await NfcManager.requestTechnology(NfcTech.Ndef);
   
-      const bytes = Ndef.encodeMessage([Ndef.uriRecord(`https://counterspell.byteatatime.dev/users/${encodeURIComponent(userId)}`)]);
+      const bytes = Ndef.encodeMessage([Ndef.uriRecord(`https://counterspellsv.xyz/users/${encodeURIComponent(userId)}`)]);
   
       if (bytes) {
         await NfcManager.ndefHandler // STEP 2

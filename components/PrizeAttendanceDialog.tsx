@@ -30,7 +30,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
             throw new Error('Session ID is null or undefined');
           }
           let token = await getToken({ sessionId });
-          const response = await fetch(`https://counterspell.byteatatime.dev/api/users/${selectedUser}/prize?prizeId=${selectedPrize}`, {
+          const response = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/prize?prizeId=${selectedPrize}`, {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${token}`
