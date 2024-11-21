@@ -18,7 +18,8 @@ import {GrantXPDialog} from "~/components/GrantXPDialog";
 import {EventAttendanceDialog} from "~/components/EventAttendanceDialog";
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import Prize from '~/lib/prize';
-import { PrizeAttendanceDialog } from '~/components/PrizeAttendanceDialog';
+import { PrizeAttendanceDialog } from '~/components/PrizeDialog';
+import { InfoDialog } from '~/components/InfoDialog';
   
 export default function Page() {
   const { user } = useUser()
@@ -45,10 +46,13 @@ export default function Page() {
   useWarmUpBrowser();
 
   useEffect(() => {
-    getUsers()
-    getEvents()
-    getPrizes()
-  })
+    const fetchData = async () => {
+      await getUsers();
+      await getEvents();
+      await getPrizes();
+    };
+    fetchData();
+  }, []);
 
 
 
@@ -85,6 +89,7 @@ export default function Page() {
       userList.push(new User(user.id, user.displayName, user.primaryEmail, user.imageUrl))
     }
     setAllUsers(userList)
+    console.log(userList)
   }
 
   const getEvents = async () => {
@@ -105,6 +110,7 @@ export default function Page() {
       eventList.push(new Event(event.id, event.name))
     }
     setAllEvents(eventList)
+    console.log(eventList)
   }
 
   const getPrizes = async () => {
@@ -153,6 +159,14 @@ export default function Page() {
               </View>
               <View className="w-1/2 aspect-square">
                 <PrizeAttendanceDialog prizes={allPrizes} />
+              </View>
+            </View>
+            <View className="flex flex-row gap-5">
+              <View className="w-1/2">
+                <InfoDialog />
+              </View>
+              <View className="w-1/2 aspect-square">
+
               </View>
             </View>
           </View>

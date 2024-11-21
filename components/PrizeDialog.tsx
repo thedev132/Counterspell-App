@@ -30,7 +30,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
         if (!sessionId) {
             throw new Error('Session ID is null or undefined');
           }
-          let token = await getToken({ sessionId });
+
           const response = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/prize?prizeId=${selectedPrize}`, {
             method: 'POST',
             headers: {
@@ -51,7 +51,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
         if (isOpen) {
             const userId = await readNdef();
             setSelectedUser(userId);
-            const userResponse = await fetch(`https://counterspell.byteatatime.dev/api/users/${userId}/admin`, {
+            const userResponse = await fetch(`https://counterspellsv.xyz/api/users/${userId}/`, {
                 headers: {
                     Authorization: `Bearer ${await getToken()}`
                 }
@@ -73,7 +73,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
             <DialogHeader>
                 <DialogTitle>Buy Prize</DialogTitle>
                 <DialogDescription>
-                    {user ? `User: ${user.displayName} (${user.xp.xp} XP)` : "Loading user..."}
+                    {user ? `User: ${user.displayName} (${user.xp ?? 0} XP)` : "Loading user..."}
                 </DialogDescription>
             </DialogHeader>
 
