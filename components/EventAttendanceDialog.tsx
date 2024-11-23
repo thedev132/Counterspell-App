@@ -30,13 +30,14 @@ export const EventAttendanceDialog = ({events}: { events: Event[] }) => {
           }
           let token = await getToken({ sessionId });
           let userID = await readNdef()
-          const response = await fetch(`https://counterspellsv.xyz/api/users/${userID}/event?eventId=${eventID}`, {
+          const response = await fetch(`https://counterspellsv.xyz/api/users/${userID}/event?eventId=${selectedEvent}`, {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${token}`
             },
             mode: 'cors'
           })
+          console.log(await response.json())
       
           if (response.ok) {
             setOpen(false)

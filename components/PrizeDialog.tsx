@@ -73,7 +73,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
             <DialogHeader>
                 <DialogTitle>Buy Prize</DialogTitle>
                 <DialogDescription>
-                    {user ? `User: ${user.displayName} (${user.xp ?? 0} XP)` : "Loading user..."}
+                    {user ? `User: ${user.displayName} (${user.xp.xp ?? 0} XP)` : "Loading user..."}
                 </DialogDescription>
             </DialogHeader>
 

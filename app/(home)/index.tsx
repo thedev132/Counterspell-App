@@ -23,17 +23,14 @@ import { InfoDialog } from '~/components/InfoDialog';
   
 export default function Page() {
   const { user } = useUser()
-  const { signOut, sessionId, getToken } = useAuth();
+  const { signOut, sessionId, getToken, isSignedIn } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [allPrizes, setAllPrizes] = useState<Prize[]>([]);
   const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
 
-
-
   WebBrowser.maybeCompleteAuthSession();
-
 
    const useWarmUpBrowser = () => {
     useEffect(() => {
@@ -51,7 +48,7 @@ export default function Page() {
       await getEvents();
       await getPrizes();
     };
-    fetchData();
+    if (isSignedIn) fetchData();
   }, []);
 
 
@@ -170,6 +167,7 @@ export default function Page() {
               </View>
             </View>
           </View>
+          <Text className='text-center text-gray-500 text-sm'>Build a3b45h</Text>
         </View>
       </SignedIn>
   

@@ -44,7 +44,7 @@ export const InfoDialog = () => {
             console.log(data)
             setDisplayName(data.displayName);
             setAvatarURL(data.avatar);
-            setXP(data.xp != null ? data.xp : 0);
+            setXP(data.xp.xp != null ? Number(data.xp.xp) : 0);
             setPrizes(data.prizes);
             setEvents(data.attendedEvents);
     
