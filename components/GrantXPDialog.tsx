@@ -49,7 +49,7 @@ export const GrantXPDialog = ({users}: { users: User[] }) => {
     return <Dialog open={open} onOpenChange={async isOpen => {
         if (isOpen) {
             const userId = await readNdef();
-            if (userId == null) {
+            if (userId == "") {
                 setSelectedUser("");
             }
             else {
