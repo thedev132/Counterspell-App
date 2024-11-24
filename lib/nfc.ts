@@ -33,6 +33,7 @@ export async function createHuntTag(huntId: string) {
     try {
 
       await NfcManager.requestTechnology(NfcTech.Ndef);
+  
       const bytes = Ndef.encodeMessage([Ndef.uriRecord(`https://counterspellsv.xyz/hunt/${encodeURIComponent(huntId)}`)]);
 
       if (bytes) {
