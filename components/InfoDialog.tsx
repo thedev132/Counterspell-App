@@ -44,7 +44,7 @@ export const InfoDialog = () => {
             console.log(data)
             setDisplayName(data.displayName);
             setAvatarURL(data.avatar);
-            setXP(data.xp.xp != null ? Number(data.xp.xp) : 0);
+            setXP(data.xp != null ? Number(data.xp.xp) : 0);
             setPrizes(data.prizes);
             setEvents(data.attendedEvents);
     
@@ -79,9 +79,12 @@ export const InfoDialog = () => {
                     //     </View>
                     // ))
                     events.map((event, index) => (
-                        <View key={index} className={`flex flex-row w-full px-5 py-2 justify-around rounded-lg mb-2`}>
-                            <Text>{event.name}</Text>
-                            <Text>{event.attended ? "✅": "❌"}</Text>
+                        <View
+                            key={index}
+                            className="flex flex-row w-full px-5 py-2 items-center rounded-lg mb-2"
+                        >
+                            <Text className="text-start flex-1 mr-2 truncate">{event.name}</Text>
+                            <Text className="text-end">{event.attended ? "✅" : "❌"}</Text>
                         </View>
                     ))
                 }

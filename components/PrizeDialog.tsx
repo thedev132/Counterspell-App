@@ -20,7 +20,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
     const [selectedPrize, setSelectedPrize] = useState<string | null>(null);
     const { sessionId, getToken } = useAuth();
     const [selectedUser, setSelectedUser] = useState("");
-    const [user, setUser] = useState<{ xp: number, displayName: number }|null>(null);
+    const [user, setUser] = useState<{ xp: [], displayName: number }|null>(null);
     const [open, setOpen] = useState(false);
 
     const spendPrize = async () => {
@@ -73,7 +73,7 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
             <DialogHeader>
                 <DialogTitle>Buy Prize</DialogTitle>
                 <DialogDescription>
-                    {user ? `User: ${user.displayName} (${user.xp.xp ?? 0} XP)` : "Loading user..."}
+                    {user ? `User: ${user.displayName} (${user.xp ? user.xp.xp : 0} XP)` : "Loading user..."}
                 </DialogDescription>
             </DialogHeader>
 

@@ -34,7 +34,7 @@ export async function createHuntTag(huntId : string) {
       await NfcManager.requestTechnology(NfcTech.Ndef);
   
       const bytes = Ndef.encodeMessage([Ndef.uriRecord(`https://counterspellsv.xyz/hunts/${encodeURIComponent(huntId)}`)]);
-      
+
       if (bytes) {
         await NfcManager.ndefHandler 
           .writeNdefMessage(bytes);
@@ -66,7 +66,7 @@ export async function readNdef() {
       userId = Ndef.uri.decodePayload(tagFound.ndefMessage[0].payload)
     } catch (ex) {
       console.warn(ex);
-      return 'user_2p7n0qL0BmuwfwjlvjTRX1ljaxp';
+      return "user_2pGh1aUb94CYP1DmRxIXG7wMyvL";
     } finally {
       NfcManager.cancelTechnologyRequest();
     }

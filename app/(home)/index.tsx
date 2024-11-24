@@ -176,7 +176,7 @@ export default function Page() {
                 <WriteNfcDialog users={allUsers} />
               </View>
               <View className="w-1/2 aspect-square">
-                <GrantXPDialog />
+                <GrantXPDialog users={allUsers} />
               </View>
             </View>
             <View className="flex flex-row gap-5">

@@ -14,7 +14,11 @@ import {Input} from "~/components/ui/input";
 import {useAuth} from "@clerk/clerk-expo";
 import {readNdef} from "~/lib/nfc";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-export const GrantXPDialog = () => {
+import { Fallback, fallBack} from "./ui/fallBackUser";
+import * as React from "react";
+import User from "~/lib/user";
+
+export const GrantXPDialog = ({users}: { users: User[] }) => {
     const [xpAmount, setXpAmount] = useState(0);
     const [reason, setReason] = useState("");
     const {getToken} = useAuth();
@@ -45,7 +49,12 @@ export const GrantXPDialog = () => {
     return <Dialog open={open} onOpenChange={async isOpen => {
         if (isOpen) {
             const userId = await readNdef();
-            setSelectedUser(userId);
+            if (userId == null) {
+                setSelectedUser("");
+            }
+            else {
+                setSelectedUser(userId);
+            }
         }
 
         setOpen(isOpen);
@@ -62,24 +71,35 @@ export const GrantXPDialog = () => {
             <DialogHeader>
                 <DialogTitle>Grant XP</DialogTitle>
             </DialogHeader>
+            <View className="flex">
+                {/* <View style={{minHeight: "50%", maxHeight: "50%", marginBottom: 5}}>
+                    {selectedUser === "" ? (
+                        <Fallback
+                            users={users}
+                            selectedUser={selectedUser}
+                            onChangeSelectedUser={setSelectedUser}
+                        />
+                    ) : null}
+                </View> */}
 
-            <View className="flex flex-row items-center">
+                <View className="flex flex-row items-center">
+                    <Input
+                        placeholder="XP Amount"
+                        keyboardType='numeric'
+                        onChangeText={(xpAmount) => setXpAmount(Number(xpAmount))}
+                        className="flex-1"
+                    />
+                    <Button onPress={() => grantXP()} variant="outline" className="ml-2">
+                        <Text>Grant!</Text>
+                    </Button>
+                </View>
+
                 <Input
-                    placeholder="XP Amount"
-                    keyboardType='numeric'
-                    onChangeText={(xpAmount) => setXpAmount(Number(xpAmount))}
-                    className="flex-1"
+                    placeholder="Reason"
+                    onChangeText={(reason) => setReason(reason)}
+                    className="mt-2" // Add some margin for spacing
                 />
-                <Button onPress={() => grantXP()} variant="outline" className="ml-2">
-                    <Text>Grant!</Text>
-                </Button>
             </View>
-
-            <Input
-                placeholder="Reason"
-                onChangeText={(reason) => setReason(reason)}
-                className="mt-2" // Add some margin for spacing
-            />
 
             <DialogFooter>
                 <DialogClose asChild>
