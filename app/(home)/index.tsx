@@ -20,6 +20,7 @@ import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import Prize from '~/lib/prize';
 import { PrizeAttendanceDialog } from '~/components/PrizeDialog';
 import { InfoDialog } from '~/components/InfoDialog';
+import { HuntsDialog } from '~/components/HuntsDialog';
   
 export default function Page() {
   const { user } = useUser()
@@ -64,7 +65,7 @@ export default function Page() {
         router.replace('/');
       }
     } catch (err) {
-      console.error('OAuth error', err);
+      console.error('OAuth error', JSON.stringify(err));
     }
   }, [startOAuthFlow]);
 
@@ -163,7 +164,7 @@ export default function Page() {
                 <InfoDialog />
               </View>
               <View className="w-1/2 aspect-square">
-
+                <HuntsDialog />
               </View>
             </View>
           </View>

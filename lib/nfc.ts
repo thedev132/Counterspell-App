@@ -25,6 +25,31 @@ export async function writeNdef(userId : string) {
     return result;
   }
 
+export async function createHuntTag(huntId : string) {
+    NfcManager.start();
+    let result = false;
+  
+    try {
+
+      await NfcManager.requestTechnology(NfcTech.Ndef);
+  
+      const bytes = Ndef.encodeMessage([Ndef.uriRecord(`https://counterspellsv.xyz/hunts/${encodeURIComponent(huntId)}`)]);
+      
+      if (bytes) {
+        await NfcManager.ndefHandler 
+          .writeNdefMessage(bytes);
+        result = true;
+      }
+    } catch (ex) {
+      console.warn(ex);
+    } finally {
+
+      NfcManager.cancelTechnologyRequest();
+    }
+  
+    return result;
+  }
+
 export async function readNdef() {
     NfcManager.start();
     let tagFound = null;
