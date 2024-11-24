@@ -26,11 +26,6 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
     const spendPrize = async () => {
         if (!selectedPrize) return; // Or handle the case where no prize is selected
 
-        // Your spendPrize logic here, using selectedPrize
-        if (!sessionId) {
-            throw new Error('Session ID is null or undefined');
-          }
-
           const response = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/prize?prizeId=${selectedPrize}`, {
             method: 'POST',
             headers: {

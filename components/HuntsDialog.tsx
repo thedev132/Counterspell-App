@@ -40,7 +40,7 @@ export const HuntsDialog = () => {
 
 
         const responseData = await response.json();
-        console.log(responseData)
+        console.log(responseData.id)
         let status = await createHuntTag(responseData.id);
 
         if (response.ok && status) {
