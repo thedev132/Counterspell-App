@@ -22,7 +22,7 @@ export const EventAttendanceDialog = ({events, users}: { events: Event[], users:
     const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
     const { sessionId, getToken } = useAuth();
     const [open, setOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState("");
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const markAttendance = async () => {
         if (!selectedEvent) return; // Or handle the case where no event is selected
