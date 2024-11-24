@@ -29,6 +29,7 @@ export default function Page() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [allPrizes, setAllPrizes] = useState<Prize[]>([]);
+  const [latestCommitHash, setLatestCommitHash] = useState<string | null>(null);
   const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
 
   WebBrowser.maybeCompleteAuthSession();
@@ -48,6 +49,7 @@ export default function Page() {
       await getUsers();
       await getEvents();
       await getPrizes();
+      await getLatestCommitHash('thedev132', 'Counterspell-App');
     };
     if (isSignedIn) fetchData();
   }, []);
@@ -132,6 +134,32 @@ export default function Page() {
     console.log(prizeList)
   }
 
+  async function getLatestCommitHash(owner, repo) {
+    const url = `https://api.github.com/repos/${owner}/${repo}/commits`;
+  
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`GitHub API returned status: ${response.status}`);
+      }
+  
+      const commits = await response.json();
+      if (commits.length === 0) {
+        throw new Error("No commits found in the repository.");
+      }
+  
+      const latestCommit = commits[0];
+      const shortHash = latestCommit.sha.slice(0, 7);
+      setLatestCommitHash(shortHash);
+  
+      console.log(`Latest commit hash: ${shortHash}`);
+      return shortHash;
+    } catch (error) {
+      console.error("Error fetching commits:", error.message);
+      return null;
+    }
+  }
+
 
   return (
     <SafeAreaView>
@@ -168,7 +196,7 @@ export default function Page() {
               </View>
             </View>
           </View>
-          <Text className='text-center text-gray-500 text-sm'>Build a3b45h</Text>
+          <Text className='text-center text-gray-500 text-sm'>Build {latestCommitHash}</Text>
         </View>
       </SignedIn>
   

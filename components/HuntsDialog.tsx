@@ -36,10 +36,11 @@ export const HuntsDialog = () => {
                 isActive: true
             }),
             mode: 'cors'
-        }
-        )
+        })
 
-        const responseData = await response.json();
+
+        const responseData = await response.text();
+        console.log(responseData)
         let status = await createHuntTag(responseData.id);
 
         if (response.ok && status) {
@@ -71,7 +72,7 @@ export const HuntsDialog = () => {
                     onChangeText={(xpAmount) => setXpAmount(Number(xpAmount))}
                     className="flex-1"
                 />
-                <Button onPress={() => createHunt()} variant="outline" className="ml-2">
+                <Button onPress={async () => await createHunt()} variant="outline" className="ml-2">
                     <Text>Create</Text>
                 </Button>
             </View>
