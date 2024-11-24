@@ -49,6 +49,9 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
     
     return <Dialog open={open} onOpenChange={async isOpen => {
         if (isOpen) {
+            setSelectedPrize(null);
+            setSearchQuery("");
+            setSelectedUser("");
             const userId = await readNdef();
             setSelectedUser(userId);
             const userResponse = await fetch(`https://counterspellsv.xyz/api/users/${userId}/`, {

@@ -53,6 +53,8 @@ export const EventAttendanceDialog = ({events, users}: { events: Event[], users:
     
     return <Dialog open={open} onOpenChange={async isOpen => {
         setSearchQuery("");
+        setSelectedEvent(null);
+        setSelectedUser(null);
         setOpen(isOpen);
     }}>
         <DialogTrigger asChild >
