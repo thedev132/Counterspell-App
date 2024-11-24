@@ -29,6 +29,7 @@ export const Fallback = ({
         user.name.toLowerCase().includes(searchQuery.toLowerCase())
       ) ? (
         <FlatList
+          style={{ minHeight: 0, maxHeight: "75%", flexGrow: 0 }}
           scrollEnabled={true}
           data={users.filter((user) =>
             user.name.toLowerCase().includes(searchQuery.toLowerCase())

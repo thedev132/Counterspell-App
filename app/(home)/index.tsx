@@ -181,7 +181,7 @@ export default function Page() {
             </View>
             <View className="flex flex-row gap-5">
               <View className="w-1/2">
-                <EventAttendanceDialog events={allEvents} />
+                <EventAttendanceDialog events={allEvents} users={allUsers} />
               </View>
               <View className="w-1/2 aspect-square">
                 <PrizeAttendanceDialog prizes={allPrizes} />

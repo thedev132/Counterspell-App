@@ -72,15 +72,15 @@ export const GrantXPDialog = ({users}: { users: User[] }) => {
                 <DialogTitle>Grant XP</DialogTitle>
             </DialogHeader>
             <View className="flex">
-                {/* <View style={{minHeight: "50%", maxHeight: "50%", marginBottom: 5}}>
+                <View style={{ minHeight: 0, maxHeight: "60%", marginBottom: 5 }}>
                     {selectedUser === "" ? (
-                        <Fallback
-                            users={users}
-                            selectedUser={selectedUser}
-                            onChangeSelectedUser={setSelectedUser}
-                        />
+                    <Fallback
+                        users={users}
+                        selectedUser={selectedUser}
+                        onChangeSelectedUser={setSelectedUser}
+                    />
                     ) : null}
-                </View> */}
+                </View>
 
                 <View className="flex flex-row items-center">
                     <Input

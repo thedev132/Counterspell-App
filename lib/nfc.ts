@@ -66,7 +66,7 @@ export async function readNdef() {
       userId = Ndef.uri.decodePayload(tagFound.ndefMessage[0].payload)
     } catch (ex) {
       console.warn(ex);
-      return "user_2pGh1aUb94CYP1DmRxIXG7wMyvL";
+      return "";
     } finally {
       NfcManager.cancelTechnologyRequest();
     }

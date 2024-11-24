@@ -14,12 +14,15 @@ import Event from "~/lib/event"; // Import your Event type
 import { useAuth } from "@clerk/clerk-expo";
 import { readNdef } from "~/lib/nfc";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Fallback } from "./ui/fallBackUser";
+import User from "~/lib/user";
 
-export const EventAttendanceDialog = ({events}: { events: Event[] }) => {
+export const EventAttendanceDialog = ({events, users}: { events: Event[], users: User[] }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
     const { sessionId, getToken } = useAuth();
     const [open, setOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState("");
 
     const markAttendance = async () => {
         if (!selectedEvent) return; // Or handle the case where no event is selected
@@ -30,6 +33,7 @@ export const EventAttendanceDialog = ({events}: { events: Event[] }) => {
           }
           let token = await getToken({ sessionId });
           let userID = await readNdef()
+          if (!userID) return;
           const response = await fetch(`https://counterspellsv.xyz/api/users/${userID}/event?eventId=${selectedEvent}`, {
             method: 'POST',
             headers: {
@@ -64,6 +68,15 @@ export const EventAttendanceDialog = ({events}: { events: Event[] }) => {
             <DialogHeader>
                 <DialogTitle>Event Attendance</DialogTitle>
             </DialogHeader>
+            <View style={{ minHeight: 0, maxHeight: "40%", marginBottom: 5 }}>
+                    {selectedUser === "" ? (
+                    <Fallback
+                        users={users}
+                        selectedUser={selectedUser}
+                        onChangeSelectedUser={setSelectedUser}
+                    />
+                    ) : null}
+                </View>
 
             <Input
                 placeholder="Search..."
