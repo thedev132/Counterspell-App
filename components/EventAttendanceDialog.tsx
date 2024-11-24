@@ -33,7 +33,7 @@ export const EventAttendanceDialog = ({events, users}: { events: Event[], users:
           }
           let token = await getToken({ sessionId });
           let userID = await readNdef()
-          if (!userID) return;
+          setSelectedUser(userID)
           const response = await fetch(`https://counterspellsv.xyz/api/users/${userID}/event?eventId=${selectedEvent}`, {
             method: 'POST',
             headers: {
