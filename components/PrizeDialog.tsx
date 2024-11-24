@@ -24,9 +24,8 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
     const [open, setOpen] = useState(false);
 
     const spendPrize = async () => {
-        if (!selectedPrize) return; // Or handle the case where no prize is selected
-
-          const response = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/prize?prizeId=${selectedPrize}`, {
+        const token = await getToken();
+        const response = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/prize?prizeId=${selectedPrize}`, {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${token}`
@@ -44,12 +43,10 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
     
     return <Dialog open={open} onOpenChange={async isOpen => {
         if (isOpen) {
-            setSelectedPrize(null);
             setSearchQuery("");
-            setSelectedUser("");
             const userId = await readNdef();
-            setSelectedUser(userId);
-            const userResponse = await fetch(`https://counterspellsv.xyz/api/users/${userId}/`, {
+            // setSelectedUser(userId);
+            const userResponse = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/`, {
                 headers: {
                     Authorization: `Bearer ${await getToken()}`
                 }
