@@ -45,8 +45,8 @@ export const PrizeAttendanceDialog = ({prizes}: { prizes: Prize[] }) => {
         if (isOpen) {
             setSearchQuery("");
             const userId = await readNdef();
-            // setSelectedUser(userId);
-            const userResponse = await fetch(`https://counterspellsv.xyz/api/users/${selectedUser}/`, {
+            setSelectedUser(userId);
+            const userResponse = await fetch(`https://counterspellsv.xyz/api/users/${userId}/`, {
                 headers: {
                     Authorization: `Bearer ${await getToken()}`
                 }
