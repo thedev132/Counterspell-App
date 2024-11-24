@@ -31,7 +31,7 @@ export const HuntsDialog = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                xpAmount,
+                xp: xpAmount,
                 location: location,
                 isActive: true
             }),
